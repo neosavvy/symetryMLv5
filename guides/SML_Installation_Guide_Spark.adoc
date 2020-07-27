@@ -1,0 +1,177 @@
+
+// Document variables
+:VERSION: 5.0
+= SymetryML {VERSION}:  Installation Guide Spark
+:toc:
+:source-highlighter: rouge
+:toclevels: 2
+:toc-placement: preamble
+:doctype: book
+
+
+Copyright © 2020 by Symetry, Inc. +
+14 Pine Street, Ste 6 +
+Morristown, NJ 07960 +
+All Rights Reserved +
+March 31st, 2020
+
+[[introduction]]
+== Introduction
+
+[[assumptions]]
+=== Assumptions
+
+* You have a working installation of SymetryML with Jetty. For information about performing this task, refer to the <<SML_Installation_Guide.adoc#>>.
+* Make sure that all the required libraries are in your `/opt/symetry/nativelib` folder and that your `LD_LIBRARY_PATH` is set correctly. Additionally, if you need graphics processor unit (GPU) support, refer to the <<SML_Installation_Guide_GPU.adoc#>> and to <<gpu-information>> in this guide.
+* Working installation of Spark on the same machine where the Jetty Web server is installed. Supported version is `2.4.5`. SymetryML was certified with `Spark 2.4.5 hadoop 2.6` and `Spark 2.4.5 hadoop 2.7`. Although it should work with any 2.x Spark installation as well as some version of Spark 3.x.
+
+
+[[system-requirements]]
+== System Requirements
+
+[cols="<,<",options="header",]
+|==============================================================================
+| Requirement |Description
+| GPU Support | Currently certified on CUDA 10.x with NVidia GPU with compute capability >= 3.5. Consult the <<gpu-information>> for more information.
+| Spark Master |24 to 32 cores computer with high-speed Internet connection.
+| Spark Cluster worker memory |  Minimum: 8 GB + 
+ Recommended: 16 GB + 
+ Start the number of workers on your node based on the amount of worker memory. For example, on Amazon S3: + 
+ * c5.8xlarge instance: 8 workers. + 
+ * c5.4xlarge instance: 4 workers. 
+|==============================================================================
+
+[[spark-information]]
+== Spark Information
+
+[[symetryml-spark-files]]
+=== SymetryML Spark Files
+
+[cols="<10%,<45%,<45%",options="header",]
+|==============================================================================================================================================
+|Type |Name |Description
+|File |symetry.tar.gz |Contains files that the SymetryML REST application needs to communicate with a Spark cluster. This archive file should be decompressed in `/opt/symetry`
+|==============================================================================================================================================
+
+Once the `symetry.tar.gz` file is decompressed, you should get the following in your `/opt/symetry/` folder. The `lib` and `libExt` contain the files that are needed to communicate with a spark cluster using the various _spark driver applications_ - `spark-submit`, `spark-shell`, `pyspark` or the SML web application inside of Jetty.
+
+[source, bash]
+....
+├── lib
+│   └── sym-spark-assembly.jar
+├── libExt
+│   ├── commons-pool2-2.0.jar
+│   ├── jedis2.8.5.jar
+│   ├── sym-core.jar
+│   ├── sym-dao.jar
+│   ├── sym-spark.jar
+│   └── sym-util.jar
+├── nativelib
+│   ├── libiomp5.so
+│   ├── libmkl_avx.so
+│   ├── libmkl_core.so
+│   ├── libmkl_def.so
+│   ├── libmkl_gnu_thread.so
+│   ├── libmkl_intel_lp64.so
+│   ├── libmkl_intel_thread.so
+│   ├── libmkl_rt.so
+│   └── libsym-gpu.so
+├── plugins
+│   ├── csv2.dsplugin
+│   ├── ds-plugin-csv2.jar
+│   ├── ds-plugin-splunk.jar
+│   ├── mysql-connector-java-5.1.36-bin.jar
+│   ├── splunk.dsplugin
+│   └── splunk-sdk-java-1.3.2.jar
+├── python
+│   ├── SMLDataFrameUtil.py
+│   └── SMLProjectUtil.py
+├── symetry-admin-cli.jar
+├── symetry-rest.txt
+└── symetry.sh
+....
+
+[[addition-sml-config-for-spark]]
+== Additional SymetryML Configuration for Spark Support
+
+SymetryML relies on the existence of symbolic link (`/opt/symetry/spark-support/spark2.4.5/lib`) that points to your Spark installation jars folder. Whether you are running Spark 2.4.5 with hadoop 2.6 or 2.7 it does not make any difference. Just make sure to create the symbolic link so that it points to the jars folder inside you spark installation:
+
+
+Example with Spark 2.4.5 using hadoop 2.6:
+
+[source, bash]
+....
+(base) johndoe$ pwd
+/opt/symetry/spark-support/spark2.4.5
+(base) johndoe$ ls -l
+total 0
+lrwxr-xr-x  1 neil  wheel  53  4 Mar 09:00 lib -> /Users/johndoe/appz/spark/spark-2.4.5-bin-hadoop2.6/jars
+....
+
+[[spark-cluster-configuration]]
+== Spark Cluster Configuration
+
+For information about configuring your Spark Cluster, refer to your Spark documentation. SymetryML assumes that you have an up and running Spark cluster.
+
+[[gpu-information]]
+== GPU Information
+
+[[gpu-processing-support-on-spark-worker]]
+=== GPU Processing Support on Spark Worker
+
+You can use a GPU on each worker node in your Spark cluster. If you do, be sure to install all required NVIDIA GPU drivers on each worker node in your cluster. This process is described in the next section.
+
+[[additional-gpu-steps-on-spark-worker]]
+==== Additional GPU Steps on Spark Worker
+
+Perform the following procedure to configure the nodes that will be running your spark worker for use with the NVIDIA GPU. This applies to linux.
+
+Download Cuda 10.x from https://developer.nvidia.com/
+
+1. Install CUDA, and then use the nvidia-smi command to verify that CUDA is working.
+2. Make sure that your Spark Worker `/opt/symetry/nativelib` contains the same `.so` as your SymetryML 4.2 jetty server. Please consults __SymetryML_{VERSION}_Installation Guide__ for more information
+3. Be sure that Jetty user LD_LIBRARY_PATH is set correctly like in the following:
+....
+# download cuda
+wget http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run
+
+# run the installer
+chmod +x cuda_10.2.89_440.33.01_linux.run
+./cuda_10.2.89_440.33.01_linux.run
+nvdia-smi
+# edit /home/jetty/.bashrc
+sudo su jetty
+cd
+emacs .bashrc
+# /home/jetty/.bashrc additional entries
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/opt/symetry/nativelib
+export LD_LIBRARY_PATH
+....
+
+[[gpu-support]]
+==== GPU Support
+
+[cols=",",options="header",]
+|=====================================================
+|GPU Support |Description
+|CUDA library |Currently certified on CUDA 10.x
+|Intel MKL |Working with MKL version 11.0.0 and higher
+|=====================================================
+
+[[spark-faqs]]
+== Spark FAQs 
+
+*Question:* What does the following error message mean: `ERROR 500: INTERNAL_SERVER_ERROR : Cannot assign requested address`. + 
+*Answer:* Be sure the SymetryML configuration files (/opt/symetry/symetry-rest.txt) has the rtlm.option.spark.listener.host YOUR_HOST set correctly.
+
+*Question:* What does the following error message mean: `java.lang.OutOfMemoryError: GC overhead limit exceeded`. + 
+*Answer:*Increase your worker memory using spark configuration parameters.
+
+*Question:* What does the following error message mean: `15/08/17 17:43:47 ERROR WorkerWatcher: Error was: akka.remote.InvalidAssociation: Invalid address: akka.tcp://sparkWorker@boson.local:49991`. + 
+*Answer:* This error is most likely caused by lack of memory so, verify worker logs and increase your worker memory.
+
+*Question:* I see `[java.net.BindException: Address already in use` message in my log. + 
+*Answer:* You can usually ignore this message.
+
+
+

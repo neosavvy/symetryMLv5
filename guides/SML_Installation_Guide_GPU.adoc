@@ -1,0 +1,146 @@
+// Document variables
+:VERSION: 5.0
+= SymetryML {VERSION}: GPU Installation Guide
+:toc:
+:source-highlighter: rouge
+:toclevels: 2
+:toc-placement: preamble
+:doctype: book
+
+Copyright © 2020 by Symetry, Inc. +
+14 Pine Street, Ste 6 +
+Morristown, NJ 07960 +
+All Rights Reserved +
+March 31st, 2020
+
+[[introduction]]
+== Introduction
+
+[[assumptions]]
+=== Assumptions
+
+* You have a working installation of SymetryML with Jetty. For information about performing this task, refer to the <<SML_Installation_Guide.adoc#>>.
+* Your SymetryML license allows you to use GPU or MultiGPUs SymetryML projects.
+
+[[gpu-support]]
+=== GPU Support Requirements
+
+[cols="<30%,<70%",options="header",]
+|================
+| Requirement | Description
+| CUDA Library | The SymetryML software is currently certified CUDA Version 10.x
+| Operating System | CentOS 7.x or Amazon Linux based on RedHat 7.x.
+| Supported GPUs | NVidia GPU with Compute capability >= 3.5
+|================
+
+[[configuration-information]]
+== Configuration Information
+
+SymetryML is a Java software that relies on certain native library (.so files) to work in tandem with NVIDIA GPU.
+
+[[using-symetryml-native-library]]
+=== Using SymetryML Native Library
+
+As mentioned in the <<SML_Installation_Guide.adoc#>> once you decompress the `symetry.tar.gz` archive into `/opt/symetry`, you will install the the necessary libraries to use NVIDIA gpus into the `/opt/symetry/nativelib` folder. Your `/opt/symetry/nativelib` folder should look like that:
+[source, bash]
+....
+├── nativelib
+│   ├── libiomp5.so
+│   ├── libmkl_avx.so
+│   ├── libmkl_core.so
+│   ├── libmkl_def.so
+│   ├── libmkl_gnu_thread.so
+│   ├── libmkl_intel_lp64.so
+│   ├── libmkl_intel_thread.so
+│   ├── libmkl_rt.so
+│   └── libsym-gpu.so
+....
+
+Additionally To make SymetryML works with GPU perform the following:
+
+1. Download CUDA 10 from https://developer.nvidia.com/cuda-toolkit[NVIDIA]
+2. Install CUDA, and then use the `nvidia-smi` command to verify that CUDA is working. Example for Centos 7: 
++
+[source%autofit, shell]
+----
+# download cuda
+wget http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run
+
+# run the installer
+chmod +x cuda_10.2.89_440.33.01_linux.run
+./cuda_10.2.89_440.33.01_linux.run
+
+# verify that CUDA was correctly installed
+nvdia-smi
+----
+
+3. After a sucessful cuda installation `nvidia-smi` should output something like: 
++
+[source%autofit, shell]
+----
+[root@symetry ~]# nvidia-smi
+Tue Mar 31 17:39:09 2020
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 410.48                 Driver Version: 410.48                    |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  Tesla K20c          Off  | 00000000:02:00.0 Off |                  Off |
+| 30%   32C    P0    49W / 225W |      0MiB /  5062MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   1  Tesla K20c          Off  | 00000000:03:00.0 Off |                  Off |
+| 30%   37C    P0    49W / 225W |      0MiB /  5062MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   2  Tesla K20c          Off  | 00000000:84:00.0 Off |                  Off |
+| 30%   34C    P0    43W / 225W |      0MiB /  5062MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID   Type   Process name                             Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+----
+
+4. Be sure that `jetty` user `LD_LIBRARY_PATH` is set correctly.
++
+[source, shell]
+....
+# edit /home/jetty/.bashrc
+sudo su jetty
+cd
+emacs .bashrc
+
+# Add the following lines to /home/jetty/.bashrc
+ANT_HOME=/opt/ant
+export ANT_HOME
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/opt/symetry/nativelib
+export LD_LIBRARY_PATH
+....
+
+If you encounter problem please do the following:
+
+1.  Use tool like `ldd /opt/system/nativelib/lib-symgpu.so` to pinpoint dynamic any linker problems. Make sure to run the command as the `jetty` user.
+2.  Make sure the `jetty` user `LD_LIBRARY_PATH` environment variable is correctly set.
+
+[[memory-requirements]]
+=== SymetryML Memory Requirements
+
+Please consults the <<SML_Tech_Requirements.adoc#>> for more information on memory requirement for various project sizes. Note that with SymetryML, project size is determined by the number of attributes not the number of rows.
+
+[[symetryml-configuration-and-gpu]]
+=== SymetryML Configuration and GPU
+
+As documented in the <<SML_Installation_Guide.adoc#>>, the `/opt/symetry/symetry-rest.txt`
+configuration file contains various properties that alter the SymetryML behavior. The following table lists the properties that are relevant to using SymetryML with NVIDIA GPUs.
+
+[width="100%",cols="<55%,<45%",options="header"]
+|============================================
+|Property |Description
+|`rtlm.option.rtlm.gpu.matrix.minsize` | Minimum matrix size to use GPU. Matrix operations like multiplication, inversion, etc are used when SymetryML builds models. Other operation like PCA and SVD also can leverage GPU. +
+    Recommended values : 512
+|`rtlm.option.rtlm.gpu.update.minsize` | Minimum size to use GPU when updating a SymetryML project. +
+    Recommended values:64 to 128
+|============================================

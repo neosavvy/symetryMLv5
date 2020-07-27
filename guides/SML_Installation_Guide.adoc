@@ -1,0 +1,245 @@
+// Document variables
+:VERSION: 5.0
+= SymetryML {VERSION}: Installation Guide
+:toc:
+:source-highlighter: rouge
+:toclevels: 1
+:toc-placement: preamble
+:doctype: book
+
+Copyright © 2020 by Symetry, Inc. +
+14 Pine Street, Ste 6 +
+Morristown, NJ 07960 +
+All Rights Reserved +
+March 31st, 2020
+
+[[introduction]]
+== Introduction
+
+This guide describes how to install, upgrade and configure the SymetryML suite of applications. For simplicity, the application comes prepackaged with Jetty 9.4.22. For additional information, refer to the following documents:
+
+* <<SML_Tech_Requirements.adoc#>>
+* <<SML_Installation_Guide_Spark.adoc#>>
+* <<SML_Installation_Guide_GPU.adoc#>>
+* <<../documentations/web/SML_Web_User_Guide.adoc#>>
+
+
+[[files-in-the-symetryml-package]]
+=== Files in the SymetryML Package
+
+The following table lists the files in the SymetryML-{VERSION}.tar.gz package.
+
+[align="center",width="100%",cols="<15%,<20%,<65%",options="header",]
+|=================
+|Type |Name |Description
+|Folder | examples | various, scala, python, pyspark, spark-shell, notebook SML samples & tutorials.
+|File | jetty |`/etc/init.d/` Linux service file.
+|Folder | jetty-distribution-9.4.22.v20191022 | Contains a fully functioning Jetty application with pre-installed SymetryML application in the webapps folder.
+|File | README.txt | List all files in this release.
+|File | Release-Notes.txt | Release Note.
+|File | symetry.tar.gz | Archive file that contains support files needed by SymetryML. It should normally be decompressed in the `/opt/symetry` directory. Those support files are needed to: +
+
+- communicate with a Spark cluster. +
+- support native GPU support +
+- use SymetryML with Python +
+
+Please consult the <<SML_Installation_Guide_Spark.adoc#>> as well as 
+<<SML_Installation_Guide_GPU.adoc#>> for more details.
+|=================
+
+[[installation]]
+== Installation
+
+[[assumptions]]
+=== Assumptions
+
+This section assumes you have the following files:
+
+* SymetryML package: `SymetryML-{VERSION}-tar.gz`
+* SymetryML license file: `sym.lic`.
+* Redis with version greater or equal to 2.8.19 installed  and available at port 6379 - or available on another computer
+** please see `rtlm.option.rtlm.db.redis.host` and `rtlm.option.rtlm.db.redis.port` in <<about-the-symetryml-configuration>> section for additional configuration help.
+* Java JDK 11 is installed.
+
+[[installation-procedure]]
+=== Installation Procedure
+
+After making sure that requirements of section <<assumptions>> are covered, perform the following procedure:
+
+1.  Unzip SymetrML-{VERSION}-tar.gz.
+2.  cp `jetty-distribution-9.4.22.v20191022` to /opt/.
+3.  Create a symbolic link to `jetty-distribution-9.4.22.v20191022` named `/opt/jetty`.
+4.  Edit `/opt/jetty/start.ini` to specify where your SymetryML license resides. Add a line similar to the following:
++
+....
+-Dsym.lic.loc=/opt/symetry/sym.lic
+....
+5.  Move the service file `jetty` to `/etc/init.d`
++
+....
+mv jetty /etc/init.d/
+....
+6.  Add Jetty to the list of Linux services using `chkconfig`.
+7.  Decompress the `symetry.tar.gz` file and make sure to put its contents into `/opt/symetry`. Your `/opt/symetry` folder content should be like the following:
++
+[source, bash]
+....
+├── lib
+│   └── sym-spark-assembly.jar
+├── libExt
+│   ├── commons-pool2-2.0.jar
+│   ├── jedis2.8.5.jar
+│   ├── sym-core.jar
+│   ├── sym-dao.jar
+│   ├── sym-spark.jar
+│   └── sym-util.jar
+├── nativelib
+│   ├── libiomp5.so
+│   ├── libmkl_avx.so
+│   ├── libmkl_core.so
+│   ├── libmkl_def.so
+│   ├── libmkl_gnu_thread.so
+│   ├── libmkl_intel_lp64.so
+│   ├── libmkl_intel_thread.so
+│   ├── libmkl_rt.so
+│   └── libsym-gpu.so
+├── plugins
+│   ├── csv2.dsplugin
+│   ├── ds-plugin-csv2.jar
+│   ├── ds-plugin-splunk.jar
+│   ├── mysql-connector-java-5.1.36-bin.jar
+│   ├── splunk.dsplugin
+│   └── splunk-sdk-java-1.3.2.jar
+├── python
+│   ├── SMLDataFrameUtil.py
+│   └── SMLProjectUtil.py
+├── symetry-admin-cli.jar
+├── symetry-rest.txt
+└── symetry.sh
+....
+
+8.  Start Jetty.
+
+[source, bash]
+....
+sudo service jetty start
+....
+
+[[updating-an-existing-system]]
+== Updating an Existing System
+
+Make sure to use same version of jetty for this release of SymetryML. That is `jetty-distribution-9.4.22.v20191022`.
+
+1.  Unzip SymetryML-{VERSION}-tar.gz.
+2.  Stop Jetty:
++
+....
+sudo service jetty stop
+....
+3.  cp {SymetryML-{VERSION}-tar.gz}/jetty-distribution-9.4.22.v20191022/ to /opt/jetty-distribution-9.4.22.v20191022
+3.1. Create a symbolic link `/opt/jetty` that points to `/opt/jetty-distribution-9.4.22.v20191022`
+4.  Decompress the `symetry.tar.gz` file and make sure to put its content into `/opt/symetry`. Your `/opt/symetry` folder content should be like the following:
++
+[source, bash]
+....
+├── lib
+│   └── sym-spark-assembly.jar
+├── libExt
+│   ├── commons-pool2-2.0.jar
+│   ├── jedis2.8.5.jar
+│   ├── sym-core.jar
+│   ├── sym-dao.jar
+│   ├── sym-spark.jar
+│   └── sym-util.jar
+├── nativelib
+│   ├── libiomp5.so
+│   ├── libmkl_avx.so
+│   ├── libmkl_core.so
+│   ├── libmkl_def.so
+│   ├── libmkl_gnu_thread.so
+│   ├── libmkl_intel_lp64.so
+│   ├── libmkl_intel_thread.so
+│   ├── libmkl_rt.so
+│   └── libsym-gpu.so
+├── plugins
+│   ├── csv2.dsplugin
+│   ├── ds-plugin-csv2.jar
+│   ├── ds-plugin-splunk.jar
+│   ├── mysql-connector-java-5.1.36-bin.jar
+│   ├── splunk.dsplugin
+│   └── splunk-sdk-java-1.3.2.jar
+├── python
+│   ├── SMLDataFrameUtil.py
+│   └── SMLProjectUtil.py
+├── symetry-admin-cli.jar
+├── symetry-rest.txt
+└── symetry.sh
+....
+
+5.  Restart Jetty:
++
+[source, bash]
+....
+sudo service jetty restart
+....
+
+
+[[about-the-jetty-configuration]]
+== About the Jetty Configuration
+
+[cols="<30%,<70%",options="header",]
+|==============================================
+|File |Description
+|`/etc/init.d/jetty` |Controls the Java context used to launch the Jetty application server. For instance, to modify the minimum and maximum memory used by the Java virtual machine (JVM) and change the garbage collector behavior, modify `JAVA_OPTIONS` with the following configuration: +
+`JAVA_OPTIONS="-server -Xms4096m -Xmx8192m -XX:+UseCompressedOops -XX:+UseParallelGC -XX:ParallelGCThreads=4 -Dfile.encoding=UTF-8"` +
+Notes: +
+Modify the `-Xms4096m` `-Xmx8192m` according to your project size.
+|`/opt/jetty/start.ini` |This is the file where you need to specify where you SymetryML license is located. You need to specify it using a java property like the following: +
+`-Dsym.lic.loc=/opt/symetry/sym.lic` +
+If this is not specified SymetryML will assume a default location of `/opt/symetry/sym.lic`.
+|==============================================
+
+
+[[SymetryML-Memory-Requirements]]
+== SymetryML Memory Requirements
+
+Please consults the __SymetryML-{VERSION}-Technical-Requirements__ for more information on memory requirement for various project size. Note that with SymetryML, project size are limited by the number of attributes not the number of rows.
+
+
+[[about-the-symetryml-configuration]]
+== About the SymetryML Configuration
+
+SymetryML has a configuration file in `/opt/symetry/symetry-rest.txt`. The following table provides information about available parameters.
+
+[width="100%",cols="<60%,<40%",options="header",]
+|====================================
+|Parameter |Description
+|`sml.version.host` |Reserved for internal use. Do not change.
+|`sml.version.key` |Reserved for internal use. Do not change.
+|`jobreaper.run.period` |Controls how often the ‘thread reaper’ runs. The thread reaper removes finished jobs from the job queue. Normally, a job is removed after a REST call is made to inquire about a job’s status. If this call never comes, the job reaper ensures that the queue does not grow too large.
+|`jobreaper.job.expiration` | Expiration time for a job to be removed from the list of jobs after it is finished. That is removed by the JobReaper mentioned above.
+|`ds.prediction.result.file.temp.key.timeout` |Reserved for internal use.
+|`request.signature.timeout` |Reserved for internal use.
+|`rtlm.option.rtlm.gpu.matrix.minsize` |Minimum matrix size to use GPU. Matrix is used when SymetryML builds models.
+|`rtlm.option.rtlm.gpu.update.minsize` |Minimum size to use GPU to update SymetryML project.
+|`rtlm.option.rtlm.db.redis` |Specifies whether to use redis. +
+    0 = disables persistence altogether.
+|`rtlm.option.rtlm.db.redis.host` |Hostname of the redis server. Normally, this is localhost and was never tested otherwise.
+|`rtlm.option.rtlm.db.redis.port` |Redis port (default: 6379).
+|`rtlm.option.rtlm.db.redis.sentinel` |Reserved for internal use.
+|`rtlm.option.rtlm.db.redis.sentinel.host` |Reserved for internal use.
+|`rtlm.option.rtlm.db.redis.sentinel.port` |Reserved for internal use.
+|`rtlm.option.rtlm.db.redis.master.name` |Reserved for internal use.
+|`rtlm.option.job.scheduler.fixed.thread.max.pool.size` |Number of jobs that can run in parallel. Setting this number too high might cause contention problems on the computer running SymetryML and might cause Jetty to become unresponsive. +
+    Recommended values: 1 or 2.
+|`rtlm.core.max` |Maximum number of CPU cores to use when updating a Symetry Project with data. This number cannot be higher than the number authorized in your SymetryML license.
+|`rtlm.options.sml.spark.so.send` |Spark Cluster driver socket configuration. For details, refer to the linux socket documentation.
+|`sml.spark.so.rcv` |Spark Cluster driver socket configuration. For details, refer to the linux socket documentation.
+|`spark.listener.host` | IP address to use when the Spark Cluster sends results.
+| `sml.fed.admin.trust_all_certs` | This option should be used with caution. It will allows one to join a federation setup by an admin node for which its https certificate is not to be trusted. For mode details please consult the Federated Learning section from the REST API reference at the following url: <<../documentations/rest/SML_REST_API_Reference_Guide.adoc#fedml, SML_REST_API_Reference_Guide>>
+|`sml.fed.admin.token.default.timeout.hours` | The default number of hours that federation token are valid, that is the number of hours that a user has to join a federation once the admin generate their encrypted federation information. Default is 
+|`sml.streams.error_on_df_change` | Whether or not to throw an error when the schema of stream change as new data arrive. Default is 0 for false.
+|`sml.streams.processor.num.threads` | Number of threads to use to process SML Streams. Default is 4.
+|`sml.streams.processor.sleep.time.ms.empty` | Time in millisecs to sleep when there are no activity on a Stream Processor. Default is 5000, (5 secs).
+|`sml.streams.processor.sleep.time.ms.with_record` | Time in millisecs to sleep when there are activity on a Stream Processor. Default is 0 millisecs.
+|====================================

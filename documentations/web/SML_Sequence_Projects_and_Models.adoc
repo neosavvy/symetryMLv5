@@ -1,0 +1,215 @@
+= SymetryML 5.0: Sequence Projects and Models
+:toc:
+:source-highlighter: rouge
+:toclevels: 2
+:toc-placement: preamble
+:doctype: book
+:imagesdir: ./media/sequence
+
+Copyright © 2020 by Symetry, Inc. +
+14 Pine Street, Ste 6 +
+Morristown, NJ 07960 +
+All Rights Reserved +
+April 29th, 2020
+
+[[introduction]]
+== Introduction
+
+Sequence Analysis describes a chain of events, or states, to provide a concise summary of the sequence-generating process. This summary allows us to predict the next likely state in the sequence, determine the likelihood of occurrence for a particular sequence, and generate a new sequence having the same statistical properties as the original.
+
+[[related-documents]]
+=== Related Documents
+
+For a brief introduction to data-mining concepts, as well as general guidance on navigating the SymetryML Web UI, please refer to <<SML_Web_User_Guide.adoc#>>.  
+
+[[sequence-models-and-datasets]]
+== Sequence Models and Datasets
+
+This chapter describes sequence models and datasets.
+
+[[sequence-models]]
+=== Sequence Models
+
+[[markov-chain]]
+==== Markov Chain
+
+A Markov Chain (MC) is a graphical representation of a sequence of states and the relationship among them. At its most basic, an MC model shows the probability of transitioning from one state to another.
+
+[[hidden-markov-model]]
+==== Hidden Markov Model
+
+Like the MC, a Hidden Markov Model (HMM) is a graphical model describing the probabilities of transitioning from one state to another. It extends the Markov process by focusing on two set of states:
+
+* Observed
+* Hidden
+
+The observed states, as their names imply, are visible at any given time. While hidden states are not visible directly, the user knows about their existence. The most common use case for HMM is to infer the sequence of underlying hidden states given a set of visible states.
+
+[[sequence-dataset]]
+=== Sequence Dataset
+
+In the context of SymetryML, the output of a sequence generating process is represented as a dataset containing an array of states in discrete time.
+
+For a MC model, the sequence can be as simple as an array of comma-separated values.
+
+In the following figure, the sequence represents a daily weather pattern, which we will learn.
+
+image::seq_data_weather.png[title='Sequence Data', width=75%]
+
+HMM require two sets of sequences:
+
+* One for the hidden state.
+* One for the observed state.
+
+We will use the activity dataset, which contains a labeled sequence of human activity (the hidden state), and the readings from various sensors around the room.
+
+image::seq_data_activity.png[title='Sequence Data - Activity', width=50.0%]
+
+[[markov-chain-1]]
+=== Markov Chain
+
+To work with MC models:
+
+1.  Create a new project of type *Sequence*.
++
+image::sml_p1.png[title="Sequence Project", width=50.0%]
+
+2.  Select the *weather.seq* file as your data source.
++
+image::sml_p2.png[title="Data Source Selection", width=50.0%]
+
+3.  Verify the format of the file.
++
+image::sml_p3.png[title="Verify Data", width=50.0%]
+
+4.  Verify the types. For this example, the absence of a header in the CSV file forced the program to generate header names automatically. Leave the attribute types as String. Click *Finish* to continue.
++
+image::sml_p4.png[title="Data Type Mapping", width=50.0%]
+
+5.  After the project is learned, the following univariate statistics appear.
++
+image::sml_p_univariate.png[title="Univariate Statistics", width=100.0%]
+
+6.  Click *Build Model > Sequence > Markov Chain*.
++
+image::sml_p_create_0.png[title="Build MC Model", width=25.0%]
+
+7.  Click a name, and then click **Finish**.
++
+image::sml_p_create_1.png[title="Build MC Model - Name", width=50.0%]
+
+8.  After the model is built, you can view its properties by double-clicking the corresponding model icon.
++
+image::sml_p_create_2.png[title="MC Model Info", width=100.0%]
+
+Prediction works similar to every other model. You select the input file that you want to predict and the destination file where the prediction will be written.
+
+The result should resemble the following:
++
+image::sml_p_prediction.png[title="MC Model Prediction", width=50.0%]
+
+In this figure:
+
+* *res_Result* = the next most likely step in the sequence.
+* *prob_Result* = the probability of that res_Result.
+* *seq.p_Result* = the likelihood of the sequence given your MC Model.
+
+<<<
+[[hidden-markov-model-1]]
+=== Hidden Markov Model
+
+To work with a Hidden Markov model:
+
+1.  Create a new project. Verify that the project type is *Sequence*.
++
+image::sml_hmm_p0.png[title="Sequence Project", width=50.0%]
+
+2.  Select the input data source.
++
+image::sml_hmm_p1.png[title="Data Source Selection", width=50.0%]
+
+3.  Verify your data.
++
+image::sml_hmm_p2.png[title="Data Source Verification", width=50.0%]
+
+4.  Convert the attribute types to *Categorical*.
++
+image::sml_hmm_p3.png[title="Type Conversion", width=50.0%]
+
+5.  Click *Finish* to complete the wizard.
++
+image::sml_hmm_p4.png[title="Updated data types", width=50.0%]
+
+After the learning finishes, you should see the following attributes in the univariate statistics.
+
+image::sml_hmm_p5.png[title="Project Trained", width=100.0%]
+
+<<<
+[[building-the-hmm-model]]
+=== HMM Model
+
+To build the HMM model:
+
+1.  Click **Create Model > Sequence > HMM**.
++
+image::sml_hmm_model_0.png[title="HMM Create", width=25.0%]
+
+2.  Enter a name for the model.
++
+image::sml_hmm_model_1.png[title="Model Name", width=50.0%]
+
+3.  Select the appropriate category for the hidden and the observed state. Click *Build Model* to start the model build process.
++
+image::sml_hmm_model_2.png[title="State Selection", width=50.0%]
+
+After the model is complete, you should see the following **Model Info**.
+
+image::sml_hmm_model_3.png[title="HMM Model Info", width=100.0%]
+
+You can now use your HMM to predict the sequence of hidden states given the set of observed states
+
+1.  Right-click the model icon, and then click *Predict*.
+2.  Select an input data source.
++
+image::sml_hmm_pred_0.png[title="Input selection", width=50.0%]
+
+3.  Select and output data source.
++
+image::sml_hmm_pred_1.png[title="Output selection", width=50.0%]
+
+4.  Verify that your data and the type mapping are valid.
++
+image::sml_hmm_pred_2.png[title="Data Verification", width=50.0%]
++
+image::sml_hmm_pred_3.png[title="Type selection", width=50.0%]
+
+5.  The output of the prediction should be the *pred_Result* column, a sequence of inferred hidden states, and the columns from the original file.
+
+image::sml_hmm_pred_4.png[title="HMM Prediction Result", width=100.0%]
+
+To perform an assessment:
+
+1.  Right-click the model, and then click **Assessment**.
++
+image::sml_hmm_assess_0.png[title="Assessment Menu", image,width=25%]
+
+2.  Select the input Data Source. In this example, we’re using a smaller subsample of the original data source.
++
+image::sml_hmm_assess_1.png[title="Data Selection", image,width=50%]
+
+3.  Validate that your data is valid.
++
+image::sml_hmm_assess_2.png[title="Data Preview", image,width=50%]
+
+4.  Verify the correct type mapping of attributes.
++
+image::sml_hmm_assess_3.png[title="Type Mapping", image,width=50%]
+
+5.  Be sure there is a match between the model attribute name and the name in the test file. Click *Finish* to start the assessment job.
++
+image::sml_hmm_assess_4.png[title="Target Mapping", image,width=50%]
+
+
+After the assessment completes, you should see a confusion matrix that compares the predicted hidden sequence to the actual sequence present in the file.
+
+image::sml_hmm_assess_5.png[title="Assessment Result", image,width=100%]

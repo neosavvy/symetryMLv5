@@ -1,0 +1,79 @@
+// Document variables
+:VERSION: 5.0
+= SymetryML {VERSION}: Admin User Guide
+:toc:
+:source-highlighter: rouge
+:toclevels: 2
+:toc-placement: preamble
+:doctype: book
+
+Copyright © 2020 by Symetry, Inc. +
+14 Pine Street, Ste 6 +
+Morristown, NJ 07960 +
+All Rights Reserved +
+March 31st, 2020
+
+[[introduction]]
+== Introduction
+
+The SymetryML Admin CLI is a command-line application that allows administrators to manage service updates and user credentials. This user guide describes the common usage patterns for the SymetryML Admin CLI. 
+
+[[display-available-commands]]
+=== Display Available Commands
+
+This command displays all the available commands in the SymetryML CLI,
+
+[source, bash]
+....
+symetry.sh [ help ]
+....
+
+[[software-version]]
+=== Software Version
+
+This command performs version checks within SymetryML. Version checks also are performed automatically when a user logs into the SymetryML Web application.
+
+[source, bash]
+....
+symetry.sh version
+....
+
+For request regarding updating your Symetry ML software please support@symetry.net
+
+[[manage-user-credentials]]
+=== Manage User Credentials
+
+[[show-user-credential-types]]
+==== Show User Credential Types
+
+Display the current user credentials.
+
+[source, bash]
+....
+symetry.sh showCredentials
+....
+
+[[change-user-credentials]]
+==== Change User Credentials
+
+This command changes user credentials.
+
+[source, bash]
+....
+symetry.sh newkey <USER>
+....
+
+where `USER` is the name of the user whose credentials you want to change.
+
+
+[[new-user]]
+==== New User
+
+Create a new user and displays the corresponding credentials.
+
+[source, bash]
+....
+symetry.sh addUser <USER>
+....
+
+where `USER` is the name of the new user.

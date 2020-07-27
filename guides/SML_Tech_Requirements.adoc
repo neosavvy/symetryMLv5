@@ -1,0 +1,76 @@
+// Document variables
+:VERSION: 5.0
+= SymetryML {VERSION}: Technical Requirements
+:toc:
+:source-highlighter: rouge
+:toclevels: 2
+:toc-placement: preamble
+:doctype: book
+
+Copyright © 2020 by Symetry, Inc. +
+14 Pine Street, Ste 6 +
+Morristown, NJ 07960 +
+All Rights Reserved +
+March 31st, 2020
+
+[[technical-requirements]]
+== Technical Requirements
+
+[[technical-requirement-for-symetryml]]
+=== Technical Requirement for SymetryML
+
+[cols="<30%,<70%",options="header",]
+|============================================================================
+|Requirement | Description
+|Operating System | Centos 7.x or Amazon Linux Based on Red Hat 7.x
+|Application Server | Certified with Jetty 9.4.22
+|Additional Drivers | CUDA version 10. or up
+|GPU | NVIDIA Tesla or GPU with minimum compute capability of 3.0
+|Spark | Spark 2.4.x
+|Java  | Java 11
+|Redis | Redis 2.8.x
+|============================================================================
+
+
+[[system-recommendations]]
+=== System Recommendations
+
+[width="86%",cols="<50%,<50%",options="header",]
+|===========================================
+|Recommendation |Description
+|Spark Cluster worker memory |Minimum: 8 GB +
+    Recommended: 16 GB and more
+|===========================================
+
+[[gpu-support]]
+=== GPU Support
+
+[width="68%",cols="<33%,<67%",options="header",]
+|==============================================
+|GPU Support |Description
+|CUDA library |CUDA Version 10.x
+|Intel MKL |Version 11.0+
+|==============================================
+
+[[symetryml-memory-requirements]]
+== SymetryML Memory Requirements
+
+SymetryML memory requirements depend on the number of projects and the number of attributes in each project. The following table provides a rough guideline as to the compute and memory requirements for your projects. These numbers are for dense datasets. For sparse datasets, the number will vary.
+
+.Typical Memory Requirements
+[cols="<,<,<",options="header",]
+|=========================================================
+|Number of Attributes |Type of Project | RAM Memory Requirement 
+| 10 | CPU | 512m 
+| 64 | CPU | 512m 
+| 128 | CPU or GPU | 1g 
+| 512 | GPU | 1g 
+| 1024 | GPU | 1g 
+| 4096 | GPU or multi-GPU| 4g 
+| 8192 | GPU or multi-GPU| 16g 
+| 12,500 | GPU or multi-GPU| 24g 
+| 20,000-25,000 | multi-GPU| 64g  
+| 25,000-100,000 | multi-GPU on NVidia V100 | 64G to 256G  
+|=========================================================
+
+

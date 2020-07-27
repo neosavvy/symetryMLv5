@@ -1,0 +1,91 @@
+// Document variables
+:VERSION: 5.0
+= SymetryML {VERSION}: Maintenance Guide
+:toc:
+:source-highlighter: rouge
+:toclevels: 2
+:toc-placement: preamble
+:doctype: book
+
+Copyright © 2020 by Symetry, Inc. +
+14 Pine Street, Ste 6 +
+Morristown, NJ 07960 +
+All Rights Reserved +
+March 31st, 2020
+
+[[requirements]]
+== Requirements
+=== Customer Requirements
+
+Customer shall always supply support requests in written form, by email. 
+
+Customer agrees to
+comply with all requests of the Vendor and to provide access to all documents, files, computers and servers necessary to the performance of the Vendor’s duties under this Agreement.
+
+Customer agrees to follow the Vendor’s minimum hardware and software requirements in order
+for the Software to function properly in a production environment.
+
+Customer agrees that Vendor is not responsible, nor obligated to change Software due to Customer’s change in business practices, polices or procedures. However, Customer may request new features or upgrades to accommodate all or part of said practices, polices or procedures.
+
+Customer shall provide to Vendor all data that is relevant for resolving each support request.
+Relevant data may include, but is not limited to, log files, database dumps, program scripts,
+descriptions of the hardware and software environment, examples of inputs, and expected and
+actual outputs.   
+
+[[support]]
+= Support
+== Technical Support
+
+The client may open a new Support Incident by email to a technical support engineer. 
+
+Support assistance may be delivered by telephone, email and/or remote assistance via a web
+meeting. Vendor will respond to the Support Incident in accordance with the Support Response
+Times section.
+
+Support will be provided to the Client for assistance with software bugs, repair of known issues,
+troubleshooting of software malfunctions, installation and deployment, general questions, software administration and best practices procedures. Vendor is not responsible for software or hardware of third parties.
+
+[[support-hours]]
+== Support Hours
+
+Vendor will provide support Monday through Friday from 8:00AM to 8:00PM EST, weekends from 10:00AM to 6:00PM EST, with the exception of Vendor holidays. If Customer requires support outside of normal support hours, this can be arranged on a case by case basis and is subject to the availability of the support engineer and may require a minimum of 24 hrs advance notice to the Vendor.
+
+[[levels-of-support]]
+== Levels of Support
+
+.Commitment
+[cols="4,4,4,4,4",options="header",]
+|=========================================================
+| Support Classification | Description | Business | Enterprise | Elite 
+| Severity 1 | Production system down | 1st contact within 1 business day | 1st Contact within 4 business hours | 1st Contact within 1 hour
+| Severity 2 | Production system functioning but degraded | 1st contact within 1 business day | 1st Contact within 1 business day | 1st Contact within 4 hours
+| Severity 3 | Functionality is impaired | 1st Contact Within 1 business day | 1st Contact within 1 business day | 1st Contact within 1 business day
+| Severity 4 | Production system not impacted: Request for information | 1st Contact Within 1 business day | 1st Contact within 1 business day | 1st contact within 1 business day
+|=========================================================
+
+
+[[maintenance]]
+= Maintenance
+== Software Maintenance
+
+During the term of this agreement, Vendor will provide the Customer with copyrighted patches, bug
+fixes and releases of the Software along with other generally available technical material.
+
+These maintenance materials including the Software may not be used to increase the licensed
+number of versions or copies of the Software. The Customer agrees not to use, sell or transfer the
+prior version but to destroy or archive the prior version of the Software. All patches, bug fixes and releases shall be subject to the license agreement related to the Software.
+
+[[software-upgrades]]
+== Software Upgrades
+
+Vendor will provide the Customer with all minor/major software version releases during the term
+of this Agreement. Customer agrees that the releases of software upgrades are at the sole discretion of the Vendor and shall follow the Vendor’s internal quality standards.
+
+Further, Vendor will choose software features to be depreciated or included. Shall the Customer
+receive a software upgrade after the Anniversary Date of the current agreement, this shall
+constitute the Customer’s consent to renew or engage in a new Support Agreement according to the
+Terms Section below. Customers not engaged in a current Agreement will be required to purchase
+an upgrade at a rate of the Vendor’s current upgrade pricing.
+
+
+

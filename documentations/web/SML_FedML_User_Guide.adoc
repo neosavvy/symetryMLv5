@@ -1,0 +1,354 @@
+= SymetryML Federated Learning - User Guide
+:toc:
+:toclevels: 2
+:toc-placement: preamble
+:doctype: book
+:imagesdir: ./media/fedml
+
+Copyright © 2020 by Symetry, Inc. +
+14 Pine Street, Ste 6 +
+Morristown, NJ 07960 +
+All Rights Reserved +
+April 29th, 2020
+
+[[introduction]]
+== Introduction
+
+This tutorial is an introduction to the `Federated Learning` feature of SymetryML. This tutorial assumes the reader has some familiarity with the SymetryML Web User Interface (UI). If the reader is not familiar with the SymetryML Web UI, please refer to the SymetryML 5.0 Web User Guide (<<SML_Web_User_Guide.adoc#>>).
+
+{nbsp} +
+
+[[related-documents]]
+=== Related Documents
+
+For a brief introduction to data-mining concepts, as well as general guidance on navigating the SymetryML Web UI, please refer to <<SML_Web_User_Guide.adoc#>>.  
+
+{nbsp} +
+
+[[symetryml-federated-learning-intro]]
+=== SymetryML: Federated Learning
+
+The objective of `Federated Learning` is to build a SymetryProject locally with the benefit of data across the `Federation` (i.e. the various member nodes), while the individual data of each node remains in it’s local environment, that is it is never being moved or transfered thus preserving data privacy. The only thing share across the `network Federation`, is the information of each local Symetry Project, which are all combined, to acheive one `Federated` SymetryProject. That is you end up with a SymetryProject that is the same as if you would have created a project with all the data in the participating nodes.
+
+This Federated SymetryML project can then be used like any other SymetryML project to explore the federated data or to build models locally at each member node of the `Federation`.  These locally built models will be identical to one another, and - again - would be identical to-and the equivalent of one  model built by putting all the data from all members of the `Federation` into one physical location and then ingesting it into one SymetryML project. 
+
+With the SymetryML Federated Learning network, all data residing at respective local nodes is never moved, confidential information is never shared, data privacy is never compromised, and operates within the parameters set forth by various data governance organizations regarding data privacy protections.   
+
+{nbsp} +
+[[symetryml-federated-learning-network-messaging]]
+=== SymetryML: Federated Learning Network
+
+In the SymetryML Federated Learning network, all proprietary data always resides locally with the respective memebers of the `Federation`, however the co-ordination of messaging (i.e. sending updates, notifications, etc...) is hosted on the Amamazon Web Services (AWS) infrastructure. +
+
+The SymetryML Federated Learning network utilizes the following AWS services for transmission of information:
+
+.AWS Service Used
+|===
+| AWS Simple Notification Service (SNS) | Topic and Subscriptions are used to disseminate message across all the nodes in the federation.
+| AWS Simple Queuing Service (SQS) | SQS queues are the final endpoint of SNS subscriptions and are used to store message while waiting to be processed by Federation nodes.
+| AWS Simple Storage Service (S3) | When a node sends a scheduled message to other node in the federation, it will contain a pointer to a file that contain a serialized version of its SymetryML project. This file is stored on Amazon S3. Special care about where these files are stored need to be addressed. Typically your AWS admin would create a special IAM role for the AWS user credentials that will be used when creating / joining a federation. Ideally this IAM role should allow the user to read / write only a specific Amazon S3 bucket. See <<About-s3-access>> for more details.
+| AWS Security Token Service (STS) | This service is used to create temporarily AWS credentials that will allow other node to read serialized SymetryProject on S3. Again see <<About-s3-access>> for more details.
+|===
+
+{nbsp} +
+All that is needed to use SymetryML Federated Learning is to use an AWS user credentials with the following access rights:
+
+.AWS Policies Needed:
+|===
+| *AmazonSQSFullAccess* | SQS queues are needed to store temporarily messages sent to individual node
+| *AmazonS3FullAccess* or some form of restricted access | S3 is needed to store periodic abstracts sent to other nodes. See <<About-s3-access>> for details, and consult with your AWS admin.
+| *AmazonSNSFullAccess* | SNS is needed to create federation as well as connecting SQS queue to SNS topic.
+|===
+
+{nbsp} +
+[[About-s3-access]]
+=== About AWS S3 Access Right
+
+The AWS credentials that are used when setting up a federation will be used to read and write files on Amazon S3. Ideally your AWS administrator should create a special Role for the user credential being used. This is important as, even though SymetryML Fed ML will not send your credentials to other node(s) in the federation, it will use those credentials to create temporarily Amazon STS credential that will effectively have the same right as the credentials used when creating or joining a federation.
+
+
+[[symetryml-federated-learning]]
+== SymetryML: Federated Learning, HOW-TO
+
+After you log in to SymetryML Web, you arrive at the main SymetryML Web interface. In the upper left corner you see the heading `Projects`, and directly below is the `CREATE PROJECT` icon, which provides a drop down menu with the following options:
+
+* Local Project
+* Create Federation
+* Join Federation
+
+[[id-sml-fedml-main-page]]
+image::sml_fedml_MainPage.png[title='Symetry Web Main UI Creating a Federation', scaledwidth=95.0%]
+
+{nbsp} +
+In this tutorial, we are going to focus on the latter two options which constitute the Federated Learning capabilities of SymetryML: +
+
+* Create Federation +
+* Join Federation +
+
+[[fml-create-federation]]
+=== SymetryML: Create Federation
+
+When you click on the `Create Federation` option, you are presented with the following:
+
+[[fml-create-federation-pic1]]
+image::sml_fedml_CreateFedOptions.png[title='Federated Learning: Creating a Federation', scaledwidth=95.0%]
+
+{nbsp} +
+The following information needs to be inputed:
+
+.Parameters Needed
+|===
+| *Group Name* | This is the name given to the Federation being created.
+| *Project Name* | This is the name of the local project.
+| *Project Type* | This applies to the local project, declare whether the local project is CPU or GPU run. 
+| *AWS Region* | This is the region where S3 bucket will reside.
+| *AWS S3 Bucket* | This is the name of the S3 bucket, where updates will be saved to.
+| *AWS S3 Access Key* | Enter AWS Access Key information here. 
+| *AWS S3 Secret Key* | Enter AWS Secret Key information here. 
+|===
+
+Once all the information above is satisfied, click `CREATE`. Now that you have created the `Federation`, next step will
+be to load data to the local project, which will participate in the newly created `Federation`.  
+
+[[fml-load-local-data]]
+=== SymetryML: Load data to local project
+
+Right click on your `Local Project` and the menu displayed below will appear. Click on `Add Data`:
+
+[[fml-load-data-local-pic1]]
+image::sml_fedml_LoadLocalData1.png[title='Federated Learning: Loading data to local project', scaledwidth=95.0%]
+
+{nbsp} +
+The next window allows you to select your your data source, whether an existing data source already loaded into SymetryML, or a new data source to be loaded:
+
+[[fml-load-data-local-pic2]]
+image::sml_fedml_LoadLocalDataNode1VerifyDatasource.png[title='Federated Learning: Selecting data for local project', scaledwidth=95.0%]
+
+{nbsp} +
+The window below, allows you to review a sample of the data being loaded to ensure the data is valid:
+
+[[fml-load-data-local-pic3]]
+image::sml_fedml_LoadLocalDataNode1ValidData.png[title='Federated Learning: reviewing data loaded to local project', scaledwidth=95.0%]
+
+{nbsp} +
+Next we want to `Learn` the data, in other words we are scanning the local project data to ascertain various descriptive statistics about the data.  
+
+[[fml-learn-data1]]
+image::sml_fedml_LearnLocalDataMenu.png[title='Federated Learning: Learning local data', scaledwidth=95.0%]
+
+{nbsp} +
+The following window allows you to review all the attributes of your dataset, and make modifications to the data type classifications (i.e. Continuos, String, Binary, etc...) if necesarry. 
+
+[[fml-learn-data2]]
+image::sml_fedml_LearnLocalDataNode1VerifyData.png[title='Federated Learning: Reviewing local data', scaledwidth=95.0%]
+
+{nbsp} +
+Next, we look at what has been learned about the local data. Double click on the `Exploration` tab and the following screen will appear: 
+
+[[fml-explore-data1]]
+image::sml_fedml_LearnLocalDataNode1Exploration.png[title='Federated Learning: Reviewing local data', scaledwidth=95.0%]
+
+{nbsp} +
+Here you can explore the statisticla behaviour of your data with the various functions 
+(i.e. Univariate, Correlation, Hypothesis Testing, Anova, Chi-Squared, PCA, SVD, Information Gain). The capabilities of these functions are explained in detail in the tutorial `SymetryML 5.0 Web User Guide` (<<SML_Web_User_Guide.adoc#>>). 
+
+[[fml-encryption-key]]
+=== SymetryML: Group Info - Allowing Others to Join the Federation
+
+Now that we have set up our Federation, we need to create a `Password` and `Encryption Key` to share with users that wish to join the Federation. Right click on the `Federation` tab, and the following screen will appear:
+
+[[fml-group-info-key]]
+image::sml_fedml_FedGroupInfo.png[title='Federated Learning: Creating a Federation', scaledwidth=95.0%]
+
+{nbsp} +
+Select `Group Info`, and the following screen will appear:
+
+[[fml-encryption-key-pic1]]
+image::sml_fedml_FedGroupInfoEncryptionKey.png[title='Federated Learning: Creating a Federation', scaledwidth=95.0%]
+
+{nbsp} +
+Provide the information requested for `Group Rest Host` and create a password for the Federation and populate `Group Info Password`, select `ENCRYPT`, at which time `Group Info` will populate with an Encryption Key to be shared with and utilized by the Federation. 
+
+.Get Encrypted Group Information
+|===
+| *Group Rest Host* | Enter the name of the server hosting SymetryML.
+| *Group Info Password* | Create a password to be utilized by the Federation being created.
+| *Group Info* | Once `Group Rest Host` and `Group Info` are populated, select `ENCRYPT`, and an Encryption key will be 
+generated. 
+|===
+
+{nbsp} +
+The `Group Info Password` and `Group Info` encryption key will be required by other parties to login and join the Federation being created. 
+
+
+[[joining-existing-federation]]
+=== SymetryML: Joining an Existing Federation:
+
+Now we will take a look at the steps required to join an existing Federation. 
+
+Click on the dropdown menu of `Create Project` and select `Join Federation`:
+
+[[sml-select-create-local-project]]
+image::sml_fedml_JoinFederationMenu.png[title='Federated Learning: Join Federation', scaledwidth=95.0%]
+
+
+Next, the following window will appear, detailing all the pertinent information required to join an existing `Federation`, greater detail on the information required follows this Figure:
+
+[[sml-select-name-local-project]]
+image::sml_fedml_JoinFederationInputInfo.png[title='Federated Learning: Join Federation, input information', scaledwidth=95.0%] 
+
+{nbsp} +
+.Get Group Information
+|===
+| *Group Info* | The `Encryption Key`, provied by the host of the `Federation`. 
+| *Group Info Password* | The `Password`, provided by the host of the `Federation`.
+| *Project Name* | The name given to the local project. 
+| *AWS S3 Bucket* | The name of the S3 Bucket to receive routine updates from the Federation.
+| *AWS Account* | This is the ID number of your AWS Account.
+| *AWS S3 Access Key* | The AWS S3 Access Key information.
+| *AWS S3 Secret Key* | The AWS S3 Secret key information. 
+|===
+
+{nbsp} +
+Next, we load data to the local project joining the existing `Federation`. Rigt click on your local
+project, and select `Add Data`: 
+
+[[sml-join-federation-load-data]]
+image::sml_fedml_JoinFederationLoadData.png[title='Joining Federation: Loading data to local project', scaledwidth=95.0%]
+
+{nbsp} +
+Once you click on `Add Data`, next you select the datasource and data you wish to load:
+
+[[join-federation-verify-data-local-project]]
+image::sml_fedml_JoinFederationLoadData_DataSource.png[title='Joining Federation: Selecting datasource & data', scaledwidth=95.0%]
+
+{nbsp} +
+The following screen allows you to verify that your data attributes have been assigned the correct data type, and allows for changes to be made to data types if necesarry:
+
+[[join-federation-verify-data-types-local-project]]
+image::sml_fedml_JoinFederationLoadData_VerifyData.png[title='Joining Federation: verify data', scaledwidth=95.0%]
+
+{nbsp} +
+Now that your data is loaded, time to `Learn` the data, in other words we are scanning the local project data to ascertain various descriptive statistics about the data.
+
+Right click on the dataset and a dropdown menu will appear, select `Learn`:
+
+[[join-federation-learn-data-local-project]]
+image::sml_fedml_JoinFederationLoadData_LearnData.png[title='Joining Federation: Learning local data', scaledwidth=95.0%]
+
+{nbsp} +
+Next, a window will appear that allows you to verify that your data attributes have been assigned the correct variable type, and allow for corrections if necesarry:
+
+[[join-federation-learn-data-variable-type]]
+image::sml_fedml_JoinFederationLoadData_VariableType.png[title='Joining Federation: Learn Data & Verify variable type', scaledwidth=95.0%]
+
+{nbsp} +
+Next, we can click on `Exploration` and look at the select descriptive statistics of our local data:
+
+[[join-federation-exploration-local-data]]
+image::sml_fedml_JoinFederationLoadData_Exploration.png[title='Joining Federation: Learning local data', scaledwidth=95.0%]
+
+{nbsp} +
+Finally, we are ready to join the `Federation` and share our local project with the `Federation`. Double click on `Exploration` and the following screen will appear. Here we click `Start Pulse`, and this starts the periodic sharing of information with the `Federation`, in this example it is every `Hour` as this is what was set by the `Federation`. (Need to list Frequencies: minute, hour, day, week, month).  
+
+
+[[join-federation-start-pulse]]
+image::sml_fedml_JoinFederationStartPulse.png[title='Joining Federation: Start Pulse', scaledwidth=95.0%]
+
+{nbsp} +
+[[sml-federated-data-and-models]]
+=== SymetryML: Federated Data & Modelling
+
+It is now time to see how the `Federation` allows sharing of these local projects so that every node can build one unified `Federated` project. After this, we will take a look at how individual nodes of the same `Federation` are able to build identical models. Next, we will take a look at the individual projects of a `Federation` to see how they all end up with the same `Federated` information. 
+
+=== SymetryML: Federation Node 1
+
+Here is a view of the project of Node 1 prior to other nodes joining the Federation:
+
+[[federation-node1-data-exploration-pre-federation]]
+image::sml_fedml_LearnLocalDataNode1Exploration.png[title='Node 1: Local project prior to sync with Federation', scaledwidth=95.0%]
+
+{nbsp}+
+Here is a view of the project of Node 1 once another nodes joins the Federation and shared its project with other nodes in the federation (in this case only 1 node).
+
+{nbsp} +
+[[federation-node1-data-exploration-post-federation]]
+image::sml_fedml_JoinFederation_FederatedDataNode1.png[title='Node 1: local project after sync with Federation', scaledwidth=95.0%]
+
+{nbsp} +
+The first noticeable difference is that the `COUNT` increased from a local count of 10,000 to a Federated `COUNT` of 20,000. Node 1 has a 
+`COUNT` of 10,000 and Node 2 has a `COUNT` of 10,000, hence the Federated `COUNT` is now totalling 20,000 as noted in Figure 21. Upon further
+inspection it becomes evident that the remaining statistics (i.e. Mean, Variance, Std. Dev, and Skewness) now reflect the total `Federation`.
+
+=== SymetryML: Federation Node 2
+
+Here is a view of the project of Node 2 prior to joining the Federation:
+
+[[federation-node2-data-exploration-pre-federation]]
+image::sml_fedml_JoinFederationLoadData_Exploration.png[title='Node 1: Local project prior to joining Federation', scaledwidth=95.0%]
+
+{nbsp} +
+Here is a view of the project of Node 2 after joining the Federation and sharing/receiving projects from the `Federation` (in this case only one other node).
+
+[[federation-node2-data-exploration-post-federation]]
+image::sml_fedml_JoinFederation_FederatedDataNode2.png[title='Node 1: project after joining Federation', scaledwidth=95.0%]
+
+{nbsp} +
+Once again,the first noticeable difference is that the `COUNT` increased from a local count of 10,000 to a Federated `COUNT` of 20,000. Node 1 has a
+`COUNT` of 10,000 and Node 2 has a `COUNT` of 10,000, hence the Federated `COUNT` is now totalling 20,000 as noted in Figure 23. Once again, the 
+remaining statistics (i.e. Mean, Variance, Std. Dev, and Skewness) now reflect the total `Federation`.
+
+=== SymetryML: Federated Learning Model Building
+
+Now that node 1 has had the benefit of learning from the entire `Federation`, it's time to build a predictive model. This is perfomred exactly the same way as with any other SymetryML project and is documented at <<SML_Web_User_Guide.adoc#models,SML Web User Guide model section>>. The following is a simple example: 
+
+Left click on `Exploration`, and you will be presented with a drop down menu with various options. Select `Create Model`, which will present another 
+drop down menu where you can choose what class of model you wish to build. In this case we are building a multi-linear regressin model, hence we are 
+going to select `Regression` and `MLR`. 
+
+[[federation-select-model-node1]]
+image::sml_fedml_FederationSelectModelNode1.png[title='Federation Node 1: Selecting model to build', scaledwidth=95.0%]
+
+{nbsp} +
+The next screen requires you to name your model:
+
+[[federation-name-model-node1]]
+image::sml_fedml_FederationNameModelNode1.png[title='Federation Node 1: Name the model', scaledwidth=95.0%]  
+
+{nbsp} +
+Next we select our `Input` and `Target` variables, and when complete we select `Build Model`:
+
+[[federation-model-variables-node1]]
+image::sml_fedml_FederationModelVariablesNode1.png[title='Federation Node 1: Select Input & Target variables, and build the model', scaledwidth=95.0%]
+
+{nbsp} +
+Next we can left click on the model name, in this case `Node1_MLR`, and a dropdown menu will appear where we select `Model Info`, or we can simply double click on the model name and the `General Model Info` will be presented (i.e. Model Name, Model Type, # of Attributes, Time to build model(s), # Models built). 
+
+[[federation-model-info-node1]]
+image::sml_fedml_FederationModel_InfoNode1.png[title='Federation Node 1: General Model Info', scaledwidth=95.0%]
+
+{nbsp} +
+Next we can left click on the model name, in this case `Node1_MLR`, a dropdown menu will appear and select `Model Code`, then select the language
+(i.e.Java,SQL) in which you wish the model parameters to be presented. For this example we will select `Java`:
+
+[[federation-model-parameters-node1]]
+image::sml_fedml_FederationModelParametersNode1.png[title='Federation Node 1: Model Parameters, Java code presentation', scaledwidth=95.0%]
+
+{nbsp} +
+Now, if we follow all the same steps for Node 2, which is also part of this `Federation`, we arrive at the same last step, as prsented for Node 1 above, 
+to reveal the model parameters of the MLR model built on Node 2:
+
+[[federation-model-parameters-node2]]
+image::sml_fedml_FederationModelParametersNode2.png[title='Federation Node 2: Model Parameters, Java code presentation', scaledwidth=95.0%]
+
+{nbsp} +
+As we can see, both Nodes produce idential models in that they share the exact same model parameters even though both models were built separately in their
+respective local environments, however they share the one thing in common: They both built their models on one unified `Federated` project of the total data in the `Federation`. 
+
+
+
+
+
+
+
+
