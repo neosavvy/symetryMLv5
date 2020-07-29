@@ -247,3 +247,6 @@ SymetryML has a configuration file in `/opt/symetry/symetry-rest.txt`. The follo
 [[troubleshooting]]
 == Troubleshooting
 
+*Question:* I am getting the following error: `java.util.concurrent.ExecutionException: javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
+
+*Answer:* The host where your jetty does not have a valid certificate. If you know you can trust this server you can bypass this by setting `sml.fed.admin.trust_all_certs=1` as documented in the <<about-the-symetryml-configuration>> section.
