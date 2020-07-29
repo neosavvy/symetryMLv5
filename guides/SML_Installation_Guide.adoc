@@ -243,3 +243,7 @@ SymetryML has a configuration file in `/opt/symetry/symetry-rest.txt`. The follo
 |`sml.streams.processor.sleep.time.ms.empty` | Time in millisecs to sleep when there are no activity on a Stream Processor. Default is 5000, (5 secs).
 |`sml.streams.processor.sleep.time.ms.with_record` | Time in millisecs to sleep when there are activity on a Stream Processor. Default is 0 millisecs.
 |====================================
+
+[[troubleshooting]]
+== Troubleshooting
+
