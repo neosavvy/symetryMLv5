@@ -108,6 +108,27 @@ total 0
 lrwxr-xr-x  1 neil  wheel  53  4 Mar 09:00 lib -> /Users/johndoe/appz/spark/spark-2.4.5-bin-hadoop2.6/jars
 ....
 
+[[additional-jars-for-spark]]
+== Additional Jars Needed for Spark
+
+SymetryML need additional jars to be able to access files on AmazonS3. These files needs to be put in `$SPARK_HOME/jars` folder. Depending on the version of Spark you are using you will need to put different jars file there.
+
+[[additional-jars-spark-2.4.x-hadoop2.6]]
+=== Spark 2.4.x with Hadoop 2.6
+
+* `aws-java-sdk-1.7.4.jar`: Add this jar to the `$SPARK_HOME/jars` folder.
+* `hadoop-aws-2.6.5.jar`: Add this jar to the `$SPARK_HOME/jars` folder or make sure to add the one with the version that match the version of hadoop-common.jar in the `jars` folder: e.g. `hadoop-common-2.6.5.jar` for instance.
+* `jets3t-0.9.4.jar`: Add this jar to the `$SPARK_HOME/jars` folder.
+* `xbean-asm6-shaded-4.10.jar`: For this one you will need to replace the pre-existing `xbean-asm6-shaded-4.8.jar` with `xbean-asm6-shaded-4.10.jar`. There is a bug in the `xbean-asm6-shaded-4.8.jar` when trying to access S3 files.
+
+[[additional-jars-spark-2.4.x-hadoop2.7]]
+=== Spark 2.4.x with Hadoop 2.7
+
+* `aws-java-sdk-1.7.4.jar`: Add this jar to the `$SPARK_HOME/jars` folder.
+* `hadoop-aws-2.7.3.jar`: Add this jar to the `$SPARK_HOME/jars` folder or make sure to add the one with the version that match the version of hadoop-common.jar in the `jars` folder: e.g. `hadoop-common-2.7.3.jar` for instance.
+* `jets3t-0.9.4.jar`: Add this jar to the `$SPARK_HOME/jars` folder.
+* `xbean-asm6-shaded-4.10.jar`: For this one you will need to replace the pre-existing `xbean-asm6-shaded-4.8.jar` with `xbean-asm6-shaded-4.10.jar`. There is a bug in the `xbean-asm6-shaded-4.8.jar` when trying to access S3 files.
+
 [[spark-cluster-configuration]]
 == Spark Cluster Configuration
 
