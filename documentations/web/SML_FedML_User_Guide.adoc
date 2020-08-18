@@ -21,7 +21,9 @@ This tutorial is an introduction to the `Federated Learning` feature of SymetryM
 [[related-documents]]
 === Related Documents
 
-For a brief introduction to data-mining concepts, as well as general guidance on navigating the SymetryML Web UI, please refer to <<SML_Web_User_Guide.adoc#>>.  
+* For a brief introduction to data-mining concepts, as well as general guidance on navigating the SymetryML Web UI, please refer to <<SML_Web_User_Guide.adoc#>>.  
+* For more details about Federated Learning refer to the <<../rest/SML_REST_API_Reference_Guide.adoc#6-about-federated-learning, About Federated Learning>> section of the SymetryML Rest API documentation.
+
 
 {nbsp} +
 
