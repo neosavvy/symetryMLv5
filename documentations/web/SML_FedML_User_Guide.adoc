@@ -38,6 +38,19 @@ With the SymetryML Federated Learning network, all data residing at respective l
 [[symetryml-federated-learning-network-messaging]]
 === SymetryML: Federated Learning Network
 
+[[symetryml-federated-learning-https-support]]
+==== Requirement for HTTPS Support
+
+*Option A:*
+
+* Need to add the Federation administrator Jetty SSL certificate to the Jetty's JVM trusted store to the peer that wants to join a federation.
+** This can be done using the JVM `keytool -importcert` command.
+
+*Option B:*
+
+* Add the following property to `/opt/symetry/symetry-rest.txt`: `sml.fed.admin.trust_all_certs=1`. Note that this property will trust all unknown certification, so be extra careful when using this option.
+
+
 In the SymetryML Federated Learning network, all proprietary data always resides locally with the respective memebers of the `Federation`, however the co-ordination of messaging (i.e. sending updates, notifications, etc...) is hosted on the Amamazon Web Services (AWS) infrastructure. +
 
 The SymetryML Federated Learning network utilizes the following AWS services for transmission of information:
