@@ -51,9 +51,9 @@ Please consult <<SML_Tech_Requirements.adoc#>> for details
 
 === Rest Application Programming Interface (API)
 To access SymetryML via Rest API, please consult 
-<<SML_REST_API_Reference_Guide.adoc#>> for details.
+<<../rest/SML_REST_API_Reference_Guide.adoc#, SML Rest API Reference Guide>> for details.
 
-The <<SML_REST_API_Reference_Guide.adoc#>> describes the SymetryML REST API. The API lets you create, update, and delete
+The <<../rest/SML_REST_API_Reference_Guide.adoc#, SML Rest API Reference Guide>> describes the SymetryML REST API. The API lets you create, update, and delete
 SymetryML projects that can be used for data-mining exploration and predictive modelling.
 
 This reference manual is intended for software developers who write client applications that interact with the SymetryML REST API.
