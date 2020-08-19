@@ -44,7 +44,7 @@ The following table lists all the instance types which SymetryML can be deployed
 [[technical-requirements]]
 === On Premise: Technical Requirements
 
-Please consult <<SML_Tech_Requirements.adoc#>> for details
+Please consult <<SML_Tech_Requirements.adoc#, SML Tech Requirements>> for details
 
 [[user-interface]]
 == User Interface
