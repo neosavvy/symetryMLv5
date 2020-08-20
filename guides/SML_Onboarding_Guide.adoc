@@ -128,7 +128,7 @@ https://github.com/symetryml/symetryMLv5/tree/master/examples/Python/notebook[Py
 2. Using a local spark cluster to perform a distributed learn on an S3 datasource in a notebook. +
 3. Using Py4J to learn a local data file in a notebook. 
 
-https://github.com/symetryml/symetryMLv5/tree/master/examples/Python/pyspark[Scala examples] +
+https://github.com/symetryml/symetryMLv5/tree/master/examples/Scala[Scala examples] +
 1. Using a Spark context to host a symetry project and learn a local data file. +
 2. Using a local spark cluster to perform a distributed learn on an S3 data source in a notebook. +
 
