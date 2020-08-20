@@ -119,26 +119,22 @@ The <<SML_Installation_Guide.adoc#, Symetry Installation Guide>> will guide you 
 
 This section guides you to tutorials with sample code demonstrating how to build SymetryML projects in different environments with Python and Scala.
 
-*_Python examples_* +
+https://github.com/symetryml/symetryMLv5/tree/master/examples/Python/pyspark[Python examples] +
 
-Using a <<../examples/Python/pyspark/iris-local-example-pyspark.py#, Spark context>> to host a symetry project and learn a local data file. +
+1. Using a Spark Context to host a symetry project and learn a local data file. +
 
-Using <<../examples/Python/pyspark/iris-s3-example-pyspark.py#, Spark>> to perform a distributed learn on an S3 datasource. +
+2. Using Spark to perform a distributed learn on an S3 datasource. +
 
-
-*_Python notebook examples_* +
- <<../examples/Python/notebook/README.md#, ReadMe document>> +
+https://github.com/symetryml/symetryMLv5/tree/master/examples/Python/notebook[Python Notebook examples] +
  
-Hidden Markov Model <<../examples/Python/notebook/SML-PartOfSpeech-Tagger-HMM-Tutorial.ipynb#, Part of Speech Tagger>> tutorial. +
+1. Hidden Markov Model Part of Speech Tagger tutorial. +
 
-Using a local spark cluster to perform a distributed learn on an S3 datasource in a <<../examples/Python/notebook/amazon-s3-example-pyspark.ipynb#, notebook>> +
+2. Using a local spark cluster to perform a distributed learn on an S3 datasource in a notebook.
 
-Using an external spark cluster to perform distributed learn on an S3 datasource in a <<../examples/notebook/amazon_s3_Example.ipynb#, notebook>> +
-
-Using Py4J to learn a local data file in a <<../examples/Python/notebook/local-example-py4j.ipynb#, notebook>> +
+3. Using Py4J to learn a local data file in a notebook. 
 
 [[symetryml-admin-users-guide]]
-==== SymetryML Admin Users Guide. TBD <<<=== DO WE NEED THIS
+==== SymetryML Admin Users Guide.
 The SymetryML Admin CLI is a command-line application that allows administrators to manage
 service updates and user credentials. This user guide describes the common usage patterns for the
 SymetryML Admin CLI.
