@@ -236,7 +236,7 @@ SymetryML has a configuration file in `/opt/symetry/symetry-rest.txt`. The follo
 |`rtlm.options.sml.spark.so.send` |Spark Cluster driver socket configuration. For details, refer to the linux socket documentation.
 |`sml.spark.so.rcv` |Spark Cluster driver socket configuration. For details, refer to the linux socket documentation.
 |`spark.listener.host` | IP address to use when the Spark Cluster sends results.
-| `sml.fed.admin.trust_all_certs` | This option should be used with caution. It will allows one to join a federation setup by an admin node for which its https certificate is not to be trusted. For mode details please consult the Federated Learning section from the REST API reference at the following url: <<../documentations/rest/SML_REST_API_Reference_Guide.adoc#fedml, SML_REST_API_Reference_Guide>>
+| `rtlm.option.sml.fed.admin.trust_all_certs` | This option should be used with caution. It will allows one to join a federation setup by an admin node for which its https certificate is not to be trusted. For mode details please consult the Federated Learning section from the REST API reference at the following url: <<../documentations/rest/SML_REST_API_Reference_Guide.adoc#fedml, SML_REST_API_Reference_Guide>>
 |`rtlm.option.sml.fed.admin.token.default.timeout.hours` | The default number of hours that federation token are valid, that is the number of hours that a user has to join a federation once the admin generate their encrypted federation information. Default is 
 |`rtlm.option.sml.streams.error_on_df_change` | Whether or not to throw an error when the schema of stream change as new data arrive. Default is 0 for false.
 |`rtlm.option.sml.streams.processor.num.threads` | Number of threads to use to process SML Streams. Default is 4.
