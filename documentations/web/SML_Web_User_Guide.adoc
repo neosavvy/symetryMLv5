@@ -302,6 +302,17 @@ corresponding binary indicators.
 After registering a particular data source with SymetryML, you have
 everything you need to learn from the newly added data.
 
+[[streams]]
+=== Streams
+
+Streams are a dynamic and constantly changing source of data. Unlike their flat file 
+counterparts, streams do not have an end. As of now, SymetryML only supports Kafka Streams. 
+More information about Kafka streams can be found https://kafka.apache.org/[here]
+.
+
+Once associated with a particular project, streams enable the project to learn new data as
+it becomes available  in a continuous  fashion without user interaction.
+
 [[symetry-job]]
 === Symetry Job
 
@@ -650,12 +661,19 @@ To create a new data source:
 Source wizard appears.
 2. Select the preferred **Data Source Type**. The wizard forms change, depending
 on the type selected, as shown in the following figures.
-  * Amazon S3
-  * SFTP
-  * Redshift
-  * JDBC
-  * Spark S3
-  * HTTP/HTTPS
++
+image::media/web/s3_ds.png[title='Amazon S3 Data Source', width=50%]
++
+image::media/web/sftp_ds.png[title='SFTP Data Source', width=50%]
++
+image::media/web/redshift_ds.png[title='Redshift Data Source', width=50%]
++
+image::media/web/jdbc_ds.png[title='JDBC Data Source', width=50%]
++
+image::media/web/spark_ds.png[title='Spark Data Source', width=50%]
++
+image::media/web/http_ds.png[title='Spark Data Source', width=50%]
+
 3. Ensure your data source settings are valid.
 4. Click *Finish* to add the data source.
 +
@@ -703,6 +721,95 @@ To edit a data source:
 changes.
 +
 image::media/web/data_source_editing.png[title='Data Source Editing', width=50%]
+
+[[working-with-streams]]
+=== Working with Streams
+
+Unlike other Data Sources, streams cannot be created independent of a project.
+The option to add a stream only exists when you:
+
+* Have an existing SymetryML project
+* Create a new SymetryML project from scratch
+
+In both cases, creating a stream would require you to specify at minimum 
+the following information:
+
+* *Bootstrap Servers*
+* *Schema Registry*
+* *Kafka Topic*
+
+image::media/web/add_stream.png[title='Stream Info', width=50%]
+
+*Time btw. Persists* is an optional parameter that controls the frequency at which
+SymetryML persists a project with a stream. Default value of 300 seconds, should be sufficient
+unless your schema contains a large number of attributes (1000+).
+
+*Start from Beginning* checkbox would read the earliest possible data from the stream.
+Unselecting this option would only update the project with the data that will be generated
+from this point in time.
+
+Advanced Kafka parameters could be enabled specified by clicking the *Kafka Options* button
+and adding the corresponding parameter/value pair.
+
+[[creating-project-add-stream]]
+==== Adding a Stream to an existing Project
+
+1. Right-click the project node, and then click *Add Stream*.
+2. Specify the required stream info (bootstrap servers, topic, and etc.)
+3. Ensure your information is valid and click *Next*
+4. Verify the stream in the preview panel. Click *Next* to continue.
+5. In the final panel specify the correct type mapping and click *Finish*
+
+[[creating-new-project-stream]]
+==== Creating a Project with Stream
+
+When creating a new project, adding a stream can be performed by simply:
+
+1. Selecting *New Data Source* on the data selection panel
+2. Specifying the required stream info (bootstrap servers, topic, and etc.)
+
+See <<creating-new-projects>> for more information.
+
+==== Stoping and Restarting a Stream
+
+Once added to a project, a stream will be continuously polled and will cause the 
+project to be updated automatically with new incoming data. This behavior  can be 
+paused and restarted again.
+
+image::media/web/stream_options.png[title='Stream Info', width=50%]
+
+To stop the update behavior:
+1. Right-click on the stream node 
+2. Click *Stop Stream*
+
+
+While this does stop the project from being update, it has no effect on the underlying stream.
+The Kafka Stream will continue to ingest  new data in the background.
+
+Resuming project update behavior  can be done in one of two ways:
+
+* A stream can be resumed from the point where it was paused (*Resume Stream*)
+* It can be restarted from the very beginning. (*Start from Beginning*)
+
+The correct restart point will depend on the architecture of your Kafka cluster.
+If the cluster allows for storage of large volume of data, simply resuming might 
+be the best option. On the other hand, if the data in the cluster is changing
+rapidly, restarting from the beginning might be more optimal.
+
+==== Stream Metrics
+
+Information about a Kafka Stream can be obtained by right clicking on the stream node
+and selecting *Stream Metrics*
+
+image::media/web/stream_metrics.png[title='Stream Metrics', width=50%]
+
+==== Stream Errors
+
+*Error Log* allows the user to diagnose any potential problems that might occur
+when interfacing with a Kafka Stream. This is the first place you should look when 
+troubleshooting.
+
+image::media/web/stream_errors.png[title='Stream Error Log', width=50%]
 
 [[working-with-encoders]]
 === Working with Encoders
