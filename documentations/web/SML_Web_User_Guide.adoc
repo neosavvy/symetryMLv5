@@ -312,7 +312,6 @@ Streams are a dynamic and constantly changing source of data. Unlike their flat 
 counterparts, streams do not have an end. As of now, SymetryML only supports Kafka Streams. 
 More information about Kafka streams can be found https://kafka.apache.org/[here]. Please also consult
 the <<working-with-streams>> section of this document.
-.
 
 Once associated with a particular project, streams enable the project to learn new data as
 it becomes available  in a continuous  fashion without user interaction.
