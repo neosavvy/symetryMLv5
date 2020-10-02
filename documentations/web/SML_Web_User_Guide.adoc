@@ -302,12 +302,16 @@ corresponding binary indicators.
 After registering a particular data source with SymetryML, you have
 everything you need to learn from the newly added data.
 
+For more details on how create data source please refer to the 
+<<working-with-data-sources>> section.
+
 [[streams]]
 === Streams
 
 Streams are a dynamic and constantly changing source of data. Unlike their flat file 
 counterparts, streams do not have an end. As of now, SymetryML only supports Kafka Streams. 
-More information about Kafka streams can be found https://kafka.apache.org/[here]
+More information about Kafka streams can be found https://kafka.apache.org/[here]. Please also consult
+the <<working-with-streams>> section of this document.
 .
 
 Once associated with a particular project, streams enable the project to learn new data as
